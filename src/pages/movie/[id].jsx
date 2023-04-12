@@ -7,7 +7,7 @@ import { MovieCard } from '@/components/Index'
 const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
   console.log(movie)
   console.log(video)
-  let trailerCount = 0
+
   return (
     <section className='py-10'>
       <div class='relative mx-auto max-w-screen-xl px-4 py-8'>
