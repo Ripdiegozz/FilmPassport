@@ -1,14 +1,10 @@
 import React from 'react'
-import { MovieCard, HeroComponent } from '@/components/Index'
+import { MovieCard } from '@/components/Index'
 
 export default function Home ({ data }) {
   return (
     <>
-      <HeroComponent />
-      <h2 className='text-6xl p-6'>Popular Movies</h2>
-      <a href='/movies' className='font-medium underline text-xl py-4'>
-        See all movies
-      </a>
+      <h2 className='text-6xl p-6'>All Movies</h2>
       <div className='flex flex-wrap items-center justify-center gap-12 p-6 pb-16'>
         {
           data.results.map((item) => {
