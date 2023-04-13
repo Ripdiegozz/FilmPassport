@@ -5,8 +5,8 @@ const Footer = () => {
   return (
     <footer className='footer p-10 bg-gray-200 justify-around items-center text-black'>
       <div className='flex-1'>
-        <Image width={200} height={80} src='/logo-film-passport.png' />
-        <p className='text-lg font-semibold'>Film Passport Industries Ltd.<br />Providing reliable films since 1992</p>
+        <Image width={200} height={80} src='/logo-film-passport.png' alt='film-passport-logo' />
+        <p className='text-lg font-semibold'>Film Passport Industries Ltd.<br />Made with 💗 by Diego Garcia</p>
       </div>
       <div>
         <span className='footer-title'>Social</span>
