@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+
+* {
+  box-shadow: 0 0 0 3px inset red;
+}

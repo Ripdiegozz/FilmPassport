@@ -9,7 +9,7 @@ export default function Home ({ data }) {
       <a href='/movies' className='font-medium underline text-xl py-4'>
         See all movies
       </a>
-      <div className='flex flex-wrap items-center justify-center gap-12 p-6 pb-16'>
+      <div className='flex flex-wrap items-center justify-center gap-12 p-2 pb-16'>
         {
           data.results.map((item) => {
             return (

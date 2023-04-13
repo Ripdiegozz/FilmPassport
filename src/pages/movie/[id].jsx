@@ -11,8 +11,8 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
   return (
     <section className='py-10'>
       <div class='relative mx-auto max-w-screen-xl px-4 py-8'>
-        <div class='flex'>
-          <div class='w-[50%] flex flex-col items-center justify-center'>
+        <div class='flex flex-col justify-center items-center md:flex-row'>
+          <div class='w-[100%] flex flex-col items-center justify-center'>
             <Image
               alt={movie.title}
               width={342}
@@ -23,7 +23,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
             <p />
           </div>
 
-          <div class='sticky top-0 w-[50%]'>
+          <div class='sticky top-0 w-[100%]'>
             <div class='mt-8 flex justify-between'>
               <div class='max-w-[50ch] space-y-2 flex flex-col gap-2'>
                 <h1 class='text-4xl font-bold sm:text-6xl'>
@@ -103,7 +103,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
           video.results.map((video) => {
             if (video.type === 'Trailer') {
               return (
-                <iframe width='46%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen key={video.id} className='mx-auto py-8' />
+                <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
               )
             }
           })
@@ -134,6 +134,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
           See all movies
         </a>
       </div>
+
       <div className='w-full flex flex-wrap gap-8 justify-center mx-auto pt-2'>
         {
           similarMovies.results.map((movie) => {
