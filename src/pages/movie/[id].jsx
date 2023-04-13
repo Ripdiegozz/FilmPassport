@@ -1,16 +1,24 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable camelcase */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { MovieCard } from '@/components/Index'
+import 'react-loading-skeleton/dist/skeleton.css'
 
-const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
-  console.log(movie)
-  console.log(video)
+const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredits }) => {
+  const [director, setDirector] = useState('')
+
+  useEffect(() => {
+    const directorName = []
+    movieCredits.crew.map((crew) => {
+      return crew.job === 'Director' ? directorName.push(crew.name) : null
+    })
+    setDirector(directorName)
+  }, [])
 
   return (
     <section className='py-10'>
-      <div class='relative mx-auto max-w-screen-xl px-4 py-8'>
+      <div class='relative mx-auto py-8'>
         <div class='flex flex-col justify-center items-center md:flex-row'>
           <div class='w-[100%] flex flex-col items-center justify-center'>
             <Image
@@ -20,19 +28,19 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
               src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
               class='rounded-xl object-fit'
             />
-            <p />
+            <p className='pt-2 text-gray-200 text-center'> {movie.release_date.slice(0, 4)} / {director} / {movie.runtime} minutes </p>
           </div>
 
-          <div class='sticky top-0 w-[100%]'>
-            <div class='mt-8 flex justify-between'>
-              <div class='max-w-[50ch] space-y-2 flex flex-col gap-2'>
-                <h1 class='text-4xl font-bold sm:text-6xl'>
+          <div class='w-[100%] p-2'>
+            <div class='mt-8 flex justify-center md:justify-between'>
+              <div class='flex flex-col gap-2'>
+                <h1 class='text-4xl font-bold sm:text-6xl text-center md:text-start'>
                   {movie.title}
                 </h1>
-                <h3 class='text-xl font-bold sm:text-2xl'>
+                <h3 class='text-xl font-bold sm:text-2xl text-center md:text-start'>
                   {movie.tagline}
                 </h3>
-                <div className='flex gap-2'>
+                <div className='flex gap-2 p-2 flex-wrap justify-center md:justify-start'>
                   {
                       movie.genres.map((genre) => {
                         return (
@@ -42,7 +50,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
                     }
                 </div>
 
-                <p class='text-md flex items-center gap-2'>
+                <p class='text-md flex items-center gap-2 justify-center md:justify-start'>
                   <span className='font-bold'>Rating:</span>
                   <svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-star' width='20' height='44' viewBox='0 0 24 24' stroke-width='1.5' stroke='#ffec00' fill='none' stroke-linecap='round' stroke-linejoin='round'>
                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
@@ -55,22 +63,22 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
 
             <div class='mt-4 flex flex-col gap-6 w-auto'>
               <div class='prose max-w-none'>
-                <p>
+                <p className='text-center md:text-start'>
                   {movie.overview}
                 </p>
               </div>
 
-              <a href={`https://www.imdb.com/title/${movie.imdb_id}/`} target='_blank' class='text-md w-[150px] font-medium underline' rel='noreferrer'>Read More on IMDB</a>
+              <a href={`https://www.imdb.com/title/${movie.imdb_id}/`} target='_blank' class='text-md w-full font-medium underline text-center md:text-start' rel='noreferrer'>Read More on IMDB</a>
             </div>
 
             {
                 watchProviders.results.US === undefined
-                  ? <p className='py-4 mt-4 text-md font-bold'> Not available to see on Internet. </p>
+                  ? <p className='py-4 mt-4 text-md font-bold text-center md:text-start'> Not available to see on Internet. </p>
                   : (
-                    <div>
+                    <div className='mx-auto flex flex-col items-center md:items-start'>
 
                       <h3 className='mt-4 font-bold'>Watch it on</h3>
-                      <div className='mt-4 flex flex gap-4'>
+                      <div className='mt-4 flex flex-wrap gap-4 justify-center md:justify-start'>
                         {watchProviders.results.US.flatrate === undefined
                           ? <p>Not available on straming.</p>
                           : watchProviders.results.US.flatrate.map((provider) => (
@@ -80,9 +88,9 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies }) => {
                       </div>
 
                       <h3 className='mt-4 font-bold'>Rent or buy it on</h3>
-                      <div className='mt-4 flex flex gap-4'>
+                      <div className='mt-4 flex flex-wrap gap-4 justify-center md:justify-start'>
                         {watchProviders.results.US.rent === undefined
-                          ? <p>Not available for rent.</p>
+                          ? <p>Not available for rent or buying.</p>
                           : watchProviders.results.US.rent.map((provider) => (
                             <a href={watchProviders.results.US.link} key={provider.id} target='_blank' rel='noreferrer'>
                               <Image key={provider.id} src={`https://image.tmdb.org/t/p/original/${provider.logo_path}`} width={50} height={50} alt={provider.provider_name} />
@@ -181,12 +189,17 @@ export const getStaticProps = async ({ params: { id } }) => {
   const similarMoviesQuery = await fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&page=1`)
   const similarMovies = await similarMoviesQuery.json()
 
+  const movieCreditsQuery = await fetch(`
+  https://api.themoviedb.org/3/movie/${id}/credits?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US`)
+  const movieCredits = await movieCreditsQuery.json()
+
   return {
     props: {
       movie,
       video,
       watchProviders,
-      similarMovies
+      similarMovies,
+      movieCredits
     }
   }
 }
