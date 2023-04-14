@@ -3,19 +3,49 @@ import { MovieCard } from '@/components/Index'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 export default function Home ({ data, categories }) {
+  const { genres } = categories
+
   const [page, setPage] = useState(1)
   const [movies, setMovies] = useState(data.results)
   const [search, setSearch] = useState('')
-  const { genres } = categories
-  console.log(genres)
-  console.log(search)
-
+  const [categoryMovies, setCategoryMovies] = useState([''])
+  const [searchTitle, setSearchTitle] = useState('')
+  console.log(categoryMovies)
+  console.log(movies[0])
   const fetchData = async () => {
     const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&page=${page + 1}`)
     const data = await response.json()
 
     setPage(page + 1)
     setMovies([...movies, ...data.results])
+  }
+
+  const fetchSearch = async (search) => {
+    let data
+    setSearchTitle(search)
+    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&query=${search}&page=1&include_adult=false`)
+    data = await response.json()
+
+    if (search === '') {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&page=${page}`)
+      data = await response.json()
+    }
+
+    setMovies(data.results)
+  }
+
+  const fetchCategory = async (id) => {
+    // eslint-disable-next-line array-callback-return
+    movies.map((movie) => {
+      if (movie.genre_ids.includes(id)) {
+        return setMovies([...movies, movie])
+      }
+    })
+  }
+
+  const addCategory = (id) => {
+    setCategoryMovies([...categoryMovies, id])
+    fetchCategory(id)
   }
 
   return (
@@ -30,20 +60,21 @@ export default function Home ({ data, categories }) {
           <label className='label'>
             <span className='label-text'>Search for a movie</span>
           </label>
-          <input type='text' placeholder='La La Land...' className='input input-bordered w-full max-w-lg' onChange={(event) => setSearch(event.target.value)} />
+          <input type='text' placeholder='La La Land...' className='input input-bordered w-full max-w-lg' onChange={(event) => fetchSearch(event.target.value)} />
+          {searchTitle !== '' ? <h3 className='text-center text-2xl p-2'>Searching for <span className='font-bold'>{searchTitle}</span></h3> : null}
         </div>
-        <div className='mx-auto w-full'>
+        {/* <div className='mx-auto w-full'>
           <h2 className='text-4xl p-6 text-center'>Sort by category</h2>
           <div className='flex flex-wrap items-center justify-center gap-2 p-2 pb-16'>
             {
               genres.map((genre) => {
                 return (
-                  <button className='badge' key={genre.id}>{genre.name}</button>
+                  <button className='badge' key={genre.id} onClick={() => addCategory(genre.id)}>{genre.name}</button>
                 )
               })
             }
           </div>
-        </div>
+        </div> */}
       </div>
 
       <InfiniteScroll
