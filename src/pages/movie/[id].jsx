@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { MovieCard } from '@/components/Index'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { toast } from 'react-hot-toast'
 
 const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredits }) => {
   const [director, setDirector] = useState('')
-
+  const [favorite, setFavorite] = useState(true)
+  const [favoriteBadgeStyle, setFavoriteBadgeStyle] = useState('badge badge-info p-4')
   useEffect(() => {
     const directorName = []
     movieCredits.crew.map((crew) => {
@@ -16,43 +18,58 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
     setDirector(directorName)
   }, [])
 
+  const favoriteStyleHandler = () => {
+    setFavorite(!favorite)
+    if (favorite) {
+      setFavoriteBadgeStyle('badge badge-success p-4 hover:bg-red-600 hover:text-white tramsition-all')
+      toast.success('Added to your favorites!')
+    } else {
+      setFavoriteBadgeStyle('badge badge-info p-4')
+    }
+  }
+
   return (
     <section className='py-10'>
-      <div class='relative mx-auto py-8'>
-        <div class='flex flex-col justify-center items-center md:flex-row'>
-          <div class='w-[100%] flex flex-col items-center justify-center'>
+      <div className='relative mx-auto py-8'>
+        <div className='flex flex-col justify-center items-center md:flex-row'>
+          <div className='w-[100%] flex flex-col items-center justify-center'>
             <Image
               alt={movie.title}
               width={342}
               height={450}
               src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-              class='rounded-xl object-fit'
+              className='rounded-xl object-fit'
             />
             <p className='pt-2 text-gray-200 text-center'> {movie.release_date.slice(0, 4)} / {director} / {movie.runtime} minutes </p>
           </div>
 
-          <div class='w-[100%] p-2'>
-            <div class='mt-8 flex justify-center md:justify-between'>
-              <div class='flex flex-col gap-2'>
-                <h1 class='text-4xl font-bold sm:text-6xl text-center md:text-start'>
+          <div className='w-[100%] p-2'>
+            <div className='mt-8 flex justify-center md:justify-between'>
+              <div className='flex flex-col gap-2'>
+
+                <h1 className='text-4xl gap-4 font-bold sm:text-6xl text-center md:text-start'>
                   {movie.title}
                 </h1>
-                <h3 class='text-xl font-bold sm:text-2xl text-center md:text-start'>
+
+                <h3 className='text-xl font-bold sm:text-2xl text-center md:text-start'>
                   {movie.tagline}
                 </h3>
-                <div className='flex gap-2 p-2 flex-wrap justify-center md:justify-start'>
+
+                <div className='flex gap-2 py-2 flex-wrap justify-center md:justify-start'>
                   {
-                      movie.genres.map((genre) => {
-                        return (
-                          <span className='badge' key={genre.id}>{genre.name}</span>
-                        )
-                      })
-                    }
+                    movie.genres.map((genre) => {
+                      return (
+                        <span className='badge' key={genre.id}>{genre.name}</span>
+                      )
+                    })
+                  }
                 </div>
 
-                <p class='text-md flex items-center gap-2 justify-center md:justify-start'>
+                <button className={`${favoriteBadgeStyle}`} onClick={favoriteStyleHandler}>{favorite ? 'Add to your favorites' : 'One of your favorites :D'}</button>
+
+                <p className='text-md flex items-center gap-2 justify-center md:justify-start'>
                   <span className='font-bold'>Rating:</span>
-                  <svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-star' width='20' height='44' viewBox='0 0 24 24' stroke-width='1.5' stroke='#ffec00' fill='none' stroke-linecap='round' stroke-linejoin='round'>
+                  <svg xmlns='http://www.w3.org/2000/svg' className='icon icon-tabler icon-tabler-star' width='20' height='44' viewBox='0 0 24 24' strokeWidth='1.5' stroke='#ffec00' fill='none' strokeLinecap='round' strokeLinejoin='round'>
                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                     <path d='M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z' />
                   </svg>
@@ -61,14 +78,14 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
               </div>
             </div>
 
-            <div class='mt-4 flex flex-col gap-6 w-auto'>
-              <div class='prose max-w-none'>
+            <div className='mt-4 flex flex-col gap-6 w-auto'>
+              <div className='prose max-w-none'>
                 <p className='text-center md:text-start'>
                   {movie.overview}
                 </p>
               </div>
 
-              <a href={`https://www.imdb.com/title/${movie.imdb_id}/`} target='_blank' class='text-md w-full font-medium underline text-center md:text-start' rel='noreferrer'>Read More on IMDB</a>
+              <a href={`https://www.imdb.com/title/${movie.imdb_id}/`} target='_blank' className='text-md w-full font-medium underline text-center md:text-start' rel='noreferrer'>Read More on IMDB</a>
             </div>
 
             {
@@ -83,7 +100,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
                           ? <p>Not available on straming.</p>
                           : watchProviders.results.US.flatrate.map((provider) => (
                             <a href={watchProviders.results.US.link} key={provider.id} target='_blank' rel='noreferrer'>
-                              <Image key={provider.id} src={`https://image.tmdb.org/t/p/original/${provider.logo_path}`} width={50} height={50} alt={provider.provider_name} />
+                              <Image src={`https://image.tmdb.org/t/p/original/${provider.logo_path}`} width={50} height={50} alt={provider.provider_name} />
                             </a>))}
                       </div>
 
@@ -93,7 +110,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
                           ? <p>Not available for rent or buying.</p>
                           : watchProviders.results.US.rent.map((provider) => (
                             <a href={watchProviders.results.US.link} key={provider.id} target='_blank' rel='noreferrer'>
-                              <Image key={provider.id} src={`https://image.tmdb.org/t/p/original/${provider.logo_path}`} width={50} height={50} alt={provider.provider_name} />
+                              <Image src={`https://image.tmdb.org/t/p/original/${provider.logo_path}`} width={50} height={50} alt={provider.provider_name} />
                             </a>))}
                       </div>
 
@@ -111,7 +128,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
           video.results.map((video) => {
             if (video.type === 'Trailer') {
               return (
-                <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
+                <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
               )
             }
           })
@@ -136,12 +153,14 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
         } */}
       </div>
 
-      <div className='flex flex-col items-center'>
-        <h2 className='text-center text-6xl p-6 font-bold mt-14'>Similar Movies</h2>
-        <a href='/movies' className='font-medium underline text-xl text-center py-6'>
-          See all movies
-        </a>
-      </div>
+      {similarMovies.total_results > 0 && (
+        <div className='flex flex-col items-center'>
+          <h2 className='text-center text-6xl p-6 font-bold mt-14'>Similar Movies</h2>
+          <a href='/movies' className='font-medium underline text-xl text-center py-6'>
+            See all movies
+          </a>
+        </div>
+      )}
 
       <div className='w-full flex flex-wrap gap-8 justify-center mx-auto pt-2'>
         {
@@ -152,7 +171,6 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
           })
         }
       </div>
-
     </section>
   )
 }
