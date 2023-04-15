@@ -23,6 +23,9 @@ const Navbar = () => {
         <a href='/movies' className='btn btn-square btn-ghost w-[5rem]'>
           Movies
         </a>
+        <a href='/favorites' className='btn btn-square btn-ghost w-[5rem]'>
+          Favorites
+        </a>
       </div>
     </div>
   )

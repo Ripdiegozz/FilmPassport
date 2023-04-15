@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
 import { MovieCard } from '@/components/Index'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import GenresComponent from '@/components/GenresComponent'
-export default function Home ({ data, categories }) {
-  const { genres } = categories
-
+export default function Home ({ data }) {
   const [page, setPage] = useState(1)
   const [movies, setMovies] = useState(data.results)
   const [search, setSearch] = useState('')
   const [searchTitle, setSearchTitle] = useState('')
-  const [showCategories, setShowCategories] = useState(false)
-  // const [categoryMovies, setCategoryMovies] = useState([''])
 
   const fetchData = async () => {
     const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&page=${page + 1}`)
@@ -35,20 +30,6 @@ export default function Home ({ data, categories }) {
     setMovies(data.results)
   }
 
-  // const fetchCategory = async (id) => {
-  //   // eslint-disable-next-line array-callback-return
-  //   movies.map((movie) => {
-  //     if (movie.genre_ids.includes(id)) {
-  //       return setMovies([...movies, movie])
-  //     }
-  //   })
-  // }
-
-  // const addCategory = (id) => {
-  //   setCategoryMovies([...categoryMovies, id])
-  //   fetchCategory(id)
-  // }
-
   return (
     <div>
 
@@ -64,11 +45,6 @@ export default function Home ({ data, categories }) {
           <input type='text' placeholder='La La Land...' className='input input-bordered w-full max-w-lg' onChange={(event) => fetchSearch(event.target.value)} />
           {searchTitle !== '' ? <h3 className='text-center text-2xl p-2'>Searching for <span className='font-bold'>{searchTitle}</span></h3> : null}
         </div>
-      </div>
-
-      <div className='w-full flex flex-col items-center justify-center'>
-        <button className='btn primary-btn' onClick={() => setShowCategories(!showCategories)}> Show the categories</button>
-        {showCategories ? <GenresComponent genres={genres} /> : null}
       </div>
 
       <InfiniteScroll
@@ -103,13 +79,9 @@ export async function getServerSideProps () {
   const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US&page=${page}`)
   const data = await response.json()
 
-  const categoriesQuery = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US')
-  const categories = await categoriesQuery.json()
-
   return {
     props: {
-      data,
-      categories
+      data
     }
   }
 }

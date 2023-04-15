@@ -8,23 +8,44 @@ import { toast } from 'react-hot-toast'
 
 const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredits }) => {
   const [director, setDirector] = useState('')
-  const [favorite, setFavorite] = useState(true)
-  const [favoriteBadgeStyle, setFavoriteBadgeStyle] = useState('badge badge-info p-4')
+  const [favorites, setFavorites] = useState([])
+  useEffect(() => {
+    const data = window.localStorage.getItem('favorites')
+    if (data !== null) setFavorites(JSON.parse(data))
+  }, [])
+  const checkFavorites = favorites.find((fav) => fav.id === movie.id)
+  const [favorite, setFavorite] = useState(checkFavorites === undefined)
+  const [favoriteButtonClassName, setFavoriteButtonClassName] = useState(favorite ? 'tw-followCard-button' : 'tw-followCard-button is-following')
+
   useEffect(() => {
     const directorName = []
     movieCredits.crew.map((crew) => {
       return crew.job === 'Director' ? directorName.push(crew.name) : null
     })
     setDirector(directorName)
-  }, [])
+  }, [movieCredits])
 
-  const favoriteStyleHandler = () => {
-    setFavorite(!favorite)
-    if (favorite) {
-      setFavoriteBadgeStyle('badge badge-success p-4 hover:bg-red-600 hover:text-white tramsition-all')
-      toast.success('Added to your favorites!')
+  useEffect(() => {
+    window.localStorage.setItem('favorites', JSON.stringify(favorites))
+  }, [favorites])
+
+  const favoriteHandler = () => {
+    const checkFavorites = favorites.find((fav) => fav.id === movie.id)
+    if (!checkFavorites) {
+      setFavorites([...favorites, movie])
+      setFavoriteButtonClassName('tw-followCard-button is-following')
+      setFavorite(false)
     } else {
-      setFavoriteBadgeStyle('badge badge-info p-4')
+      const newFavorites = favorites.filter((fav) => fav.id !== movie.id)
+      setFavorites(newFavorites)
+      setFavoriteButtonClassName('tw-followCard-button')
+      setFavorite(true)
+    }
+
+    if (favorite) {
+      toast.success('Added to favorites!')
+    } else {
+      toast.error('Deleted from favorites!')
     }
   }
 
@@ -65,7 +86,10 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
                   }
                 </div>
 
-                <button className={`${favoriteBadgeStyle}`} onClick={favoriteStyleHandler}>{favorite ? 'Add to your favorites' : 'One of your favorites :D'}</button>
+                <button className={favoriteButtonClassName + ' btn md:mx-0'} onClick={favoriteHandler}>
+                  <span className='tw-followCard-text'>{favorite ? 'Add to favorites' : 'On your favorites 💗'}</span>
+                  <span className='tw-followCard-stopFollow'>Delete from favorites</span>
+                </button>
 
                 <p className='text-md flex items-center gap-2 justify-center md:justify-start'>
                   <span className='font-bold'>Rating:</span>
@@ -122,35 +146,19 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
       </div>
 
       <h2 className='text-center text-6xl p-6 font-bold'>Trailers</h2>
-      <div className='flex flex-wrap'>
+      <div className='flex flex-wrap justify-center'>
         {
+          video.results.length > 0
           // eslint-disable-next-line array-callback-return
-          video.results.map((video) => {
-            if (video.type === 'Trailer') {
-              return (
-                <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
-              )
-            }
-          })
-        }
-
-        {/* // TODO: Add a fallback if there is no trailer */}
-
-        {/* {
-          video.results.map((video) => {
-            if (video.type === 'Trailer') {
-              trailerCount = trailerCount + 1
-            }
-
-            if (trailerCount === 0) {
-              if (video.type === 'Teaser') {
+            ? video.results.map((video) => {
+              if (video.type === 'Trailer') {
                 return (
-                  <iframe width='46%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen key={video.id} className='mx-auto py-8' />
+                  <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
                 )
               }
-            }
-          })
-        } */}
+            })
+            : <p className='text-center text-lg font-bold'>There's no trailer of this film in our database :(</p>
+        }
       </div>
 
       {similarMovies.total_results > 0 && (
