@@ -2,7 +2,7 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-    <div className='navbar bg-base-100 justify-around'>
+    <div className='navbar bg-base-100 justify-around flex-wrap'>
       <div className='flex'>
         <a href='/' className='btn btn-ghost normal-case text-xl flex gap-2'>
           <svg xmlns='http://www.w3.org/2000/svg' className='icon icon-tabler icon-tabler-movie' width='44' height='44' viewBox='0 0 24 24' strokeWidth='1.5' stroke='#ffffff' fill='none' strokeLinecap='round' strokeLinejoin='round'>
@@ -19,7 +19,7 @@ const Navbar = () => {
           Film Passport
         </a>
       </div>
-      <div className='flex-none'>
+      <div className='flex'>
         <a href='/movies' className='btn btn-square btn-ghost w-[5rem]'>
           Movies
         </a>
