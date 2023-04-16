@@ -10,10 +10,12 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
   const [director, setDirector] = useState('')
   const [favorites, setFavorites] = useState([])
   const [text, setText] = useState('Add to favorites')
+
   useEffect(() => {
     const data = window.localStorage.getItem('favorites')
     if (data !== null) setFavorites(JSON.parse(data))
   }, [])
+
   const checkFavorites = favorites.find((fav) => fav.id === movie.id)
   const [favorite, setFavorite] = useState(checkFavorites === undefined)
   const [favoriteButtonClassName, setFavoriteButtonClassName] = useState(favorite ? 'tw-followCard-button' : 'tw-followCard-button is-following')
@@ -34,9 +36,11 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
     if (checkFavorites) {
       setFavoriteButtonClassName('tw-followCard-button is-following')
       setText('On your favorites 💗')
+      setFavorite(false)
     } else {
       setFavoriteButtonClassName('tw-followCard-button')
       setText('Add to favorites')
+      setFavorite(true)
     }
   }, [checkFavorites])
 
