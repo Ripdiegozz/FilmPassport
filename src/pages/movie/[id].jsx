@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredits }) => {
   const [director, setDirector] = useState('')
   const [favorites, setFavorites] = useState([])
+  const [text, setText] = useState('Add to favorites')
   useEffect(() => {
     const data = window.localStorage.getItem('favorites')
     if (data !== null) setFavorites(JSON.parse(data))
@@ -28,6 +29,16 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
   useEffect(() => {
     window.localStorage.setItem('favorites', JSON.stringify(favorites))
   }, [favorites])
+
+  useEffect(() => {
+    if (checkFavorites) {
+      setFavoriteButtonClassName('tw-followCard-button is-following')
+      setText('On your favorites 💗')
+    } else {
+      setFavoriteButtonClassName('tw-followCard-button')
+      setText('Add to favorites')
+    }
+  }, [checkFavorites])
 
   const favoriteHandler = () => {
     const checkFavorites = favorites.find((fav) => fav.id === movie.id)
@@ -87,7 +98,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
                 </div>
 
                 <button className={favoriteButtonClassName + ' btn md:mx-0'} onClick={favoriteHandler}>
-                  <span className='tw-followCard-text'>{favorite ? 'Add to favorites' : 'On your favorites 💗'}</span>
+                  <span className='tw-followCard-text'>{text}</span>
                   <span className='tw-followCard-stopFollow'>Delete from favorites</span>
                 </button>
 
