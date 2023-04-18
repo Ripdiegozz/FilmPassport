@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { MovieCard } from '@/components/Index'
+import { MovieCard, MovieCardSkeleton } from '@/components/Index'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { toast } from 'react-hot-toast'
 
@@ -69,13 +69,13 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
       <div className='relative mx-auto py-8'>
         <div className='flex flex-col justify-center items-center md:flex-row'>
           <div className='w-[100%] flex flex-col items-center justify-center'>
-            <Image
+            {<Image
               alt={movie.title}
               width={342}
               height={450}
               src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
               className='rounded-xl object-fit'
-            />
+             /> || <MovieCardSkeleton />}
             <p className='pt-2 text-gray-200 text-center'> {movie.release_date.slice(0, 4)} / {director} / {movie.runtime} minutes </p>
           </div>
 

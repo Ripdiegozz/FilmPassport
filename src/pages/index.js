@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MovieCard, HeroComponent } from '@/components/Index'
+import { MovieCard, HeroComponent, MovieCardSkeleton } from '@/components/Index'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 export default function Home ({ data }) {
@@ -26,6 +26,7 @@ export default function Home ({ data }) {
           See all movies
         </a>
       </div>
+
       <InfiniteScroll
         dataLength={movies.length}
         next={fetchData}
@@ -40,7 +41,7 @@ export default function Home ({ data }) {
       >
         {movies.map((movie) => {
           return (
-            <MovieCard key={movie.id} movie={movie} />
+            <MovieCard key={movie.id} movie={movie} /> || <MovieCardSkeleton key={movie.id} />
           )
         })}
       </InfiniteScroll>
