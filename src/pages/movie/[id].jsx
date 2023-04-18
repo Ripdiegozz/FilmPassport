@@ -168,7 +168,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
             ? video.results.map((video) => {
               if (video.type === 'Trailer') {
                 return (
-                  <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' />
+                  <iframe width='90%' height='500px' src={`https://www.youtube.com/embed/${video.key}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen key={video.id} className='mx-auto py-8 px-2 md:w-[45%]' /> || <div className='w-[90%] md:w-[45%] mx-auto py-8 px-2 h-[500px]' />
                 )
               }
             })
