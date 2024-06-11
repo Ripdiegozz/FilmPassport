@@ -31,7 +31,7 @@ export default function Home ({ data }) {
   }
 
   return (
-    <div>
+    <div className='container'>
 
       <div className='flex flex-col items-center gap-2'>
         <h2 className='text-6xl p-6 text-center'>All Movies</h2>

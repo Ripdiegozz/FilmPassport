@@ -17,7 +17,7 @@ export default function Home ({ data }) {
   }
 
   return (
-    <div>
+    <div className='container'>
       <HeroComponent movie={heroMovie} />
 
       <div className='flex flex-col items-center gap-2'>

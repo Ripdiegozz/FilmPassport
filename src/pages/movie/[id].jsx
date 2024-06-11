@@ -64,7 +64,7 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
   }
 
   return (
-    <section className='py-10'>
+    <section className='py-10 container'>
       <div className='relative mx-auto py-8'>
         <div className='flex flex-col justify-center items-center md:flex-row'>
           <div className='w-[100%] flex flex-col items-center justify-center'>
