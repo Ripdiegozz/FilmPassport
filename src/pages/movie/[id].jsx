@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
@@ -160,6 +159,11 @@ const MovieDetails = ({ movie, video, watchProviders, similarMovies, movieCredit
         </div>
       </div>
 
+      <div className='flex flex-col items-center w-full py-8'>
+        <h2 className='text-center text-6xl p-6 font-bold'>Watch</h2>
+        <iframe width='80%' height='600px' src={`https://vidsrc.to/embed/movie/${movie.id}`} title='YouTube video player' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen className='mx-auto py-8 px-2' />
+      </div>
+
       <h2 className='text-center text-6xl p-6 font-bold'>Trailers</h2>
       <div className='flex flex-wrap justify-center'>
         {
@@ -232,6 +236,7 @@ export const getStaticProps = async ({ params: { id } }) => {
 
   const movieCreditsQuery = await fetch(`
   https://api.themoviedb.org/3/movie/${id}/credits?api_key=7872e92ab3de1ea67271b2266e243b06&language=en-US`)
+
   const movieCredits = await movieCreditsQuery.json()
 
   return {
